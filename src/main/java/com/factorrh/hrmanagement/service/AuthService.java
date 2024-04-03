@@ -1,6 +1,8 @@
 package com.factorrh.hrmanagement.service;
 
 import com.factorrh.hrmanagement.entity.Employee;
+import com.factorrh.hrmanagement.exception.AuthenticationException;
+import com.factorrh.hrmanagement.model.dto.LoginRequest;
 import com.factorrh.hrmanagement.model.dto.RegisterRequest;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
 import org.springframework.dao.DuplicateKeyException;
@@ -8,13 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
-public class EmployeeService {
+public class AuthService {
     private final EmployeeRepository repository;
-    public EmployeeService(EmployeeRepository repository) {
+    public AuthService(EmployeeRepository repository) {
         this.repository = repository;
     }
 
@@ -39,5 +43,24 @@ public class EmployeeService {
                 .password(password)
                 .build();
         repository.save(employee);
+    }
+
+    @Transactional
+    public UUID login(LoginRequest request) {
+        String username = request.username();
+        String password = request.password();
+        Optional<Employee> existingEmployee = repository.findByUsername(username);
+        if (existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            String storedPassword = employee.getPassword();
+
+            if (Objects.equals(storedPassword, password)) {     //TODO Hay que cambiar para que la contraseña se decodifique y demas
+                return employee.getEmployeeID();
+            } else {
+                throw new AuthenticationException("Username or password incorrect.");
+            }
+        } else {
+            throw new DuplicateKeyException(String.format("Employee with username '%s' already exists.", username));
+        }
     }
 }
