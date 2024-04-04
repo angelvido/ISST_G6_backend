@@ -75,7 +75,6 @@ public class AuthService {
             controller.setEmployeeId(savedEmployee.getEmployeeID());
             controllerRepository.save(controller);
         }
-        // TODO Crear recruiters, hrmanagers y controllers en funcion del job introducido
     }
 
     @Transactional
