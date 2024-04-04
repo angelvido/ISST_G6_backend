@@ -36,8 +36,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest requestDto) {
         try {
-            UUID employeeId = authService.login(requestDto);
-            LoginResponse response = new LoginResponse(employeeId);
+            LoginResponse response = authService.login(requestDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -18,22 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "employee", schema = "public")
-public class Employee {
+@Table(name = "recruiter", schema = "public")
+public class Recruiter {
     @Id
     @UuidGenerator
+    @Column(name = "recruiter_id", unique = true)
+    private UUID recruiterId;
     @Column(name = "employee_id", unique = true)
-    private UUID employeeID;
-    @Column(name = "username", unique = true)
-    private String username;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "lastname")
-    private String lastname;
-    @Column(name = "admission")
-    private LocalDate admission;
-    @Column(name = "job")
-    private String job;
-    @Column(name = "password")
-    private String password;
+    private UUID employeeId;
 }
