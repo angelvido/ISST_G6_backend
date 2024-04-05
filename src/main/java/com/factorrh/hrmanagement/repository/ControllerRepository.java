@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface ControllerRepository extends JpaRepository<Controller, UUID> {
-    Optional<Controller> findById(UUID controllerId);
     Optional<Controller> findByEmployeeId(UUID employeeId);
 }

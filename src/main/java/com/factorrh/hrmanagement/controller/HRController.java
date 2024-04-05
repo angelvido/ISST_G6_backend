@@ -9,11 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/hrmanager")
+@RequestMapping("/api/manager")
 public class HRController {
 
     private final AbsenceService absenceService;
@@ -24,20 +25,26 @@ public class HRController {
     }
 
     @GetMapping("/absences")
-    public List<Absence> getAllAbsences(HRRequest request) {
+    public List<Absence> getAllAbsences(@Valid @RequestBody HRRequest request) {
         return absenceService.getAllAbsences(request);
     }
 
+    @PostMapping("/absence")
+    public ResponseEntity<Void> createAbsence(@Valid @RequestBody Absence absence) {
+        Boolean createdAbsence = absenceService.createAbsence(absence);
+        if (createdAbsence) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    //TODO Configurar los tres siguientes metodos del controlador para que se compruebe el inicio de sesion del HRManager
     @GetMapping("/absence/{id}")
     public Absence getAbsenceById(@PathVariable UUID id) {
         return absenceService.getAbsenceById(id);
     }
 
-    @PostMapping("/absence")
-    public ResponseEntity<Void> createAbsence(@Valid @RequestBody Absence absence) {
-        absenceService.createAbsence(absence);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
 
     @PatchMapping("/absence/{id}")
     public void updateAbsence(@PathVariable UUID id, @RequestBody Absence absence) {

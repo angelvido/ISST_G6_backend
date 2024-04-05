@@ -19,11 +19,10 @@ import java.util.UUID;
 public class Absence {
     @Id
     @UuidGenerator
-    private UUID id;
+    private UUID absenceId;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
+    @Column(name = "employee_id")
+    private UUID employeeId;
 
     @Column(name = "type")
     private String type;

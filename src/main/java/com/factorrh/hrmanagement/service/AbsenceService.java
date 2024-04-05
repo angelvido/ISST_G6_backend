@@ -1,10 +1,11 @@
 package com.factorrh.hrmanagement.service;
 
 import com.factorrh.hrmanagement.entity.Absence;
+import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.HRManager;
 import com.factorrh.hrmanagement.model.dto.HRRequest;
-import com.factorrh.hrmanagement.model.dto.LoginResponse;
 import com.factorrh.hrmanagement.repository.AbsenceRepository;
+import com.factorrh.hrmanagement.repository.EmployeeRepository;
 import com.factorrh.hrmanagement.repository.HRManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,30 +20,38 @@ public class AbsenceService {
 
     private final AbsenceRepository absenceRepository;
     private final HRManagerRepository hrManagerRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public AbsenceService(AbsenceRepository absenceRepository, HRManagerRepository hrManagerRepository) {
+    public AbsenceService(AbsenceRepository absenceRepository, HRManagerRepository hrManagerRepository, EmployeeRepository employeeRepository) {
         this.absenceRepository = absenceRepository;
         this.hrManagerRepository = hrManagerRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public List<Absence> getAllAbsences(HRRequest request) {
-        UUID managerId = request.managerId();
-        Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
+        Optional<HRManager> existingHRManager = hrManagerRepository.findById(request.HRId());
         if (existingHRManager.isPresent()) {
             return absenceRepository.findAll();
-        }  else {
-            return new ArrayList<>();
+        } else {
+            return null;
         }
     }
 
+    public Boolean createAbsence(Absence absence) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(absence.getEmployeeId());
+        if (existingEmployee.isPresent()) {
+            absenceRepository.save(absence);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //TODO Hay que cambiar ligeramente estos 3 metodos para que solo el HRManager pueda modificarlos
     public Absence getAbsenceById(UUID id) {
         return absenceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Absence not found with id: " + id));
-    }
-
-    public Absence createAbsence(Absence absence) {
-        return absenceRepository.save(absence);
     }
 
     public void updateAbsence(UUID id, Absence updatedAbsence) {

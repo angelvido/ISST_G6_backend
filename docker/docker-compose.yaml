@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres-db
     environment:
-      POSTGRES_DB: playground-db
+      POSTGRES_DB: postgres-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:

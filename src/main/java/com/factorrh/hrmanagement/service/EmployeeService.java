@@ -1,7 +1,7 @@
 package com.factorrh.hrmanagement.service;
 
 import com.factorrh.hrmanagement.entity.Employee;
-import com.factorrh.hrmanagement.model.dto.DataRequest;
+import com.factorrh.hrmanagement.model.dto.EmployeeRequest;
 import com.factorrh.hrmanagement.model.dto.DataResponse;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public DataResponse data(DataRequest request) {
+    public DataResponse data(EmployeeRequest request) {
         UUID employeeId = request.employeeId();
         Optional<Employee> existingEmployee = repository.findById(employeeId);
         if (existingEmployee.isPresent()) {

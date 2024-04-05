@@ -1,6 +1,6 @@
 package com.factorrh.hrmanagement.controller;
 
-import com.factorrh.hrmanagement.model.dto.DataRequest;
+import com.factorrh.hrmanagement.model.dto.EmployeeRequest;
 import com.factorrh.hrmanagement.model.dto.DataResponse;
 import com.factorrh.hrmanagement.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<DataResponse> getData(@Valid @RequestBody DataRequest requestDto) {
+    public ResponseEntity<DataResponse> getData(@Valid @RequestBody EmployeeRequest requestDto) {
         DataResponse dataResponse = employeeService.data(requestDto);
         if (dataResponse != null) {
             return ResponseEntity.ok(dataResponse);
