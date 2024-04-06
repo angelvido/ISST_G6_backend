@@ -2,7 +2,7 @@ package com.factorrh.hrmanagement.controller;
 
 import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
-import com.factorrh.hrmanagement.model.dto.HRRequest;
+import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.service.AbsenceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class HRController {
     }
 
     @GetMapping("/absences")
-    public List<Absence> getAllAbsences(@Valid @RequestBody HRRequest request) {
+    public List<Absence> getAllAbsences(@Valid @RequestBody IDRequest request) {
         return absenceService.getAllAbsences(request);
     }
 

@@ -1,8 +1,8 @@
 package com.factorrh.hrmanagement.service;
 
 import com.factorrh.hrmanagement.entity.Employee;
-import com.factorrh.hrmanagement.model.dto.EmployeeRequest;
 import com.factorrh.hrmanagement.model.dto.DataResponse;
+import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +15,15 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 public class EmployeeService {
-    private final EmployeeRepository repository;
-    public EmployeeService(EmployeeRepository repository) {
-        this.repository = repository;
+    private final EmployeeRepository employeeRepository;
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Transactional
-    public DataResponse data(EmployeeRequest request) {
-        UUID employeeId = request.employeeId();
-        Optional<Employee> existingEmployee = repository.findById(employeeId);
+    public DataResponse data(IDRequest request) {
+        UUID employeeId = request.Id();
+        Optional<Employee> existingEmployee = employeeRepository.findById(employeeId);
         if (existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
             return new DataResponse(
@@ -44,11 +44,11 @@ public class EmployeeService {
     }
 
     @Transactional
-    public List<Employee> getEmployees(EmployeeRequest request) {
-        UUID employeeId = request.employeeId();
-        Optional<Employee> existingEmployee = repository.findById(employeeId);
+    public List<Employee> getEmployees(IDRequest request) {
+        UUID employeeId = request.Id();
+        Optional<Employee> existingEmployee = employeeRepository.findById(employeeId);
         if (existingEmployee.isPresent()) {
-            return repository.findAll();
+            return employeeRepository.findAll();
         } else {
             return Collections.emptyList();
         }

@@ -3,8 +3,8 @@ package com.factorrh.hrmanagement.controller;
 import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
-import com.factorrh.hrmanagement.model.dto.EmployeeRequest;
 import com.factorrh.hrmanagement.model.dto.DataResponse;
+import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.service.AbsenceService;
 import com.factorrh.hrmanagement.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<DataResponse> getData(@Valid @RequestBody EmployeeRequest requestDto) {
+    public ResponseEntity<DataResponse> getData(@Valid @RequestBody IDRequest requestDto) {
         DataResponse dataResponse = employeeService.data(requestDto);
         if (dataResponse != null) {
             return ResponseEntity.ok(dataResponse);
@@ -39,7 +39,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getEmployees")
-    public List<Employee> getEmployees(@Valid @RequestBody EmployeeRequest requestDto) {
+    public List<Employee> getEmployees(@Valid @RequestBody IDRequest requestDto) {
         return employeeService.getEmployees(requestDto);
     }
 
@@ -50,8 +50,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/absences")
-    public ResponseEntity<List<Absence>> getAllAbsences(@Valid @RequestBody EmployeeRequest requestDto) {
-        List<Absence> absences = absenceService.getAbsencesByEmployeeId(requestDto.employeeId());
+    public ResponseEntity<List<Absence>> getAllAbsences(@Valid @RequestBody IDRequest requestDto) {
+        List<Absence> absences = absenceService.getAbsencesByEmployeeId(requestDto.Id());
         return ResponseEntity.ok(absences);
     }
 

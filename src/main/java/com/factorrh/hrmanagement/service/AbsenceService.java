@@ -4,7 +4,7 @@ import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.HRManager;
 import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
-import com.factorrh.hrmanagement.model.dto.HRRequest;
+import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.repository.AbsenceRepository;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
 import com.factorrh.hrmanagement.repository.HRManagerRepository;
@@ -30,8 +30,8 @@ public class AbsenceService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Absence> getAllAbsences(HRRequest request) {
-        Optional<HRManager> existingHRManager = hrManagerRepository.findById(request.HRId());
+    public List<Absence> getAllAbsences(IDRequest request) {
+        Optional<HRManager> existingHRManager = hrManagerRepository.findById(request.Id());
         if (existingHRManager.isPresent()) {
             return absenceRepository.findAll();
         } else {

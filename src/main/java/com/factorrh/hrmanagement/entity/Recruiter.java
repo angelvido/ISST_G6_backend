@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,4 +26,7 @@ public class Recruiter {
     @JoinColumn(name = "employee_id")
     @JsonBackReference
     private Employee employee;
+    @OneToMany(mappedBy = "recruiter")
+    @JsonBackReference
+    private List<Offer> offers;
 }
