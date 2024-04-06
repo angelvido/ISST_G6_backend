@@ -4,7 +4,6 @@ import com.factorrh.hrmanagement.entity.Controller;
 import com.factorrh.hrmanagement.entity.HRManager;
 import com.factorrh.hrmanagement.entity.Recruiter;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.UUID;

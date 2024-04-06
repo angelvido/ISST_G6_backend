@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AbsenceService {
@@ -82,7 +81,7 @@ public class AbsenceService {
         return absenceRepository.findByEmployeeEmployeeID(employeeId);
     }
 
-    public void updateAbsenceRequest (UUID absenceId, AbsenceRequest updatedAbsence) {
+    public void updateAbsenceRequest(UUID absenceId, AbsenceRequest updatedAbsence) {
         Optional<Absence> absence = absenceRepository.findById(absenceId);
         if (absence.isPresent() && absence.get().getEmployee().getEmployeeID().equals(updatedAbsence.employeeId())) {
             Absence existingAbsence = absence.get();
@@ -93,7 +92,7 @@ public class AbsenceService {
             existingAbsence.setApproval(false);
             absenceRepository.save(existingAbsence);
         } else {
-            throw  new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");
+            throw new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");
         }
     }
 }
