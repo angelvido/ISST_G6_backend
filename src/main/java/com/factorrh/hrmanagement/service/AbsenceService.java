@@ -59,7 +59,7 @@ public class AbsenceService {
         absenceRepository.save(absence);
     }
 
-    //TODO Hay que cambiar ligeramente estos 3 metodos para que solo el HRManager pueda modificarlos
+    //TODO Hay que cambiar ligeramente estos 3 metodos siguientes para que solo el HRManager pueda modificarlos
     public Absence getAbsenceById(UUID id) {
         return absenceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Absence not found with id: " + id));
@@ -78,7 +78,6 @@ public class AbsenceService {
         absenceRepository.deleteById(id);
     }
 
-    //TODO Hay que modificar este metodo para que el Employee sea el unico que pueda acceder
     public List<Absence> getAbsencesByEmployeeId(UUID employeeId) {
         return absenceRepository.findByEmployeeEmployeeID(employeeId);
     }
