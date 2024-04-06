@@ -15,6 +15,7 @@ public record AbsenceRequest(
         @FutureOrPresent(message = "Start date must be in the present or future")
         LocalDate startDate,
         @NotNull(message = "End date cannot be null")
-        LocalDate endDate
+        LocalDate endDate,
+        boolean approval
 ) {
 }

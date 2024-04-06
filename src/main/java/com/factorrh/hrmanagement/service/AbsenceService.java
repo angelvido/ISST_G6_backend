@@ -64,12 +64,12 @@ public class AbsenceService {
                 .orElseThrow(() -> new RuntimeException("Absence not found with id: " + id));
     }
 
-    public void updateAbsence(UUID id, Absence updatedAbsence) {
+    public void updateAbsence(UUID id, AbsenceRequest updatedAbsence) {
         Absence existingAbsence = getAbsenceById(id);
-        existingAbsence.setType(updatedAbsence.getType());
-        existingAbsence.setStartDate(updatedAbsence.getStartDate());
-        existingAbsence.setEndDate(updatedAbsence.getEndDate());
-        existingAbsence.setApproval(updatedAbsence.isApproval());
+        existingAbsence.setType(updatedAbsence.type());
+        existingAbsence.setStartDate(updatedAbsence.startDate());
+        existingAbsence.setEndDate(updatedAbsence.endDate());
+        existingAbsence.setApproval(updatedAbsence.approval());
         absenceRepository.save(existingAbsence);
     }
 

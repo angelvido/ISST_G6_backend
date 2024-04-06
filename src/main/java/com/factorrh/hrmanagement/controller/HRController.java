@@ -1,6 +1,7 @@
 package com.factorrh.hrmanagement.controller;
 
 import com.factorrh.hrmanagement.entity.Absence;
+import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
 import com.factorrh.hrmanagement.model.dto.HRRequest;
 import com.factorrh.hrmanagement.service.AbsenceService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class HRController {
 
 
     @PatchMapping("/absence/{id}")
-    public void updateAbsence(@PathVariable UUID id, @RequestBody Absence absence) {
+    public void updateAbsence(@PathVariable UUID id, @RequestBody AbsenceRequest absence) {
         absenceService.updateAbsence(id, absence);
     }
 
