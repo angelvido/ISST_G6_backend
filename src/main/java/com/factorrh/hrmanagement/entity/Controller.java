@@ -1,9 +1,7 @@
 package com.factorrh.hrmanagement.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +21,8 @@ public class Controller {
     @UuidGenerator
     @Column(name = "controller_id", unique = true)
     private UUID controllerId;
-    @Column(name = "employee_id", unique = true)
-    private UUID employeeId;
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    @JsonBackReference
+    private Employee employee;
 }

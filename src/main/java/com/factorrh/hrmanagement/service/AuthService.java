@@ -60,19 +60,19 @@ public class AuthService {
 
         if ("Recruiter".equals(job)) {
             Recruiter recruiter = new Recruiter();
-            recruiter.setEmployeeId(savedEmployee.getEmployeeID());
+            recruiter.setEmployee(savedEmployee);
             recruiterRepository.save(recruiter);
         }
 
         if ("HRManager".equals(job)) {
             HRManager hrManager = new HRManager();
-            hrManager.setEmployeeId(savedEmployee.getEmployeeID());
+            hrManager.setEmployee(savedEmployee);
             hrManagerRepository.save(hrManager);
         }
 
         if ("Controller".equals(job)) {
             Controller controller = new Controller();
-            controller.setEmployeeId(savedEmployee.getEmployeeID());
+            controller.setEmployee(savedEmployee);
             controllerRepository.save(controller);
         }
     }
@@ -89,9 +89,9 @@ public class AuthService {
             if (Objects.equals(storedPassword, password)) {     //TODO Hay que cambiar para que la contraseña se decodifique y demas
 
                 UUID storedEmployeeId = employee.getEmployeeID();
-                Optional<Recruiter> existingRecruiter = recruiterRepository.findByEmployeeId(storedEmployeeId);
-                Optional<HRManager> existingHRManager = hrManagerRepository.findByEmployeeId(storedEmployeeId);
-                Optional<Controller> existingController = controllerRepository.findByEmployeeId(storedEmployeeId);
+                Optional<Recruiter> existingRecruiter = recruiterRepository.findByEmployee_EmployeeID(storedEmployeeId);
+                Optional<HRManager> existingHRManager = hrManagerRepository.findByEmployee_EmployeeID(storedEmployeeId);
+                Optional<Controller> existingController = controllerRepository.findByEmployee_EmployeeID(storedEmployeeId);
 
                 if (existingRecruiter.isPresent()) {
                     Recruiter recruiter = existingRecruiter.get();

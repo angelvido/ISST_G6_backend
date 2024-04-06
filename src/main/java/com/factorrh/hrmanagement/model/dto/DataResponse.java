@@ -1,5 +1,8 @@
 package com.factorrh.hrmanagement.model.dto;
 
+import com.factorrh.hrmanagement.entity.Controller;
+import com.factorrh.hrmanagement.entity.HRManager;
+import com.factorrh.hrmanagement.entity.Recruiter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -17,7 +20,10 @@ public record DataResponse(
         @NotBlank(message = "Admission cannot be blank")
         LocalDate admission,
         @NotBlank(message = "Job cannot be blank")
-        String job
+        String job,
+        HRManager hrManager,
+        Controller controller,
+        Recruiter recruiter
 
 ) {
 }

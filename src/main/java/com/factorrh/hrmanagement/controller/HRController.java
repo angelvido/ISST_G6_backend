@@ -5,11 +5,8 @@ import com.factorrh.hrmanagement.model.dto.HRRequest;
 import com.factorrh.hrmanagement.service.AbsenceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,16 +24,6 @@ public class HRController {
     @GetMapping("/absences")
     public List<Absence> getAllAbsences(@Valid @RequestBody HRRequest request) {
         return absenceService.getAllAbsences(request);
-    }
-
-    @PostMapping("/absence")
-    public ResponseEntity<Void> createAbsence(@Valid @RequestBody Absence absence) {
-        Boolean createdAbsence = absenceService.createAbsence(absence);
-        if (createdAbsence) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     //TODO Configurar los tres siguientes metodos del controlador para que se compruebe el inicio de sesion del HRManager

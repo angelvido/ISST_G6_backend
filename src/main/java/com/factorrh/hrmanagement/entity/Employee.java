@@ -1,5 +1,7 @@
 package com.factorrh.hrmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +36,15 @@ public class Employee {
     @Column(name = "job")
     private String job;
     @Column(name = "password")
+    @JsonIgnore
     private String password;
+    @OneToOne(mappedBy = "employee")
+    @JsonBackReference
+    private HRManager hrManager;
+    @OneToOne(mappedBy = "employee")
+    @JsonBackReference
+    private Controller controller;
+    @OneToOne(mappedBy = "employee")
+    @JsonBackReference
+    private Recruiter recruiter;
 }

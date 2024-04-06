@@ -3,6 +3,7 @@ package com.factorrh.hrmanagement.service;
 import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.HRManager;
+import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
 import com.factorrh.hrmanagement.model.dto.HRRequest;
 import com.factorrh.hrmanagement.repository.AbsenceRepository;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
@@ -10,10 +11,11 @@ import com.factorrh.hrmanagement.repository.HRManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AbsenceService {
@@ -38,14 +40,23 @@ public class AbsenceService {
         }
     }
 
-    public Boolean createAbsence(Absence absence) {
-        Optional<Employee> existingEmployee = employeeRepository.findById(absence.getEmployeeId());
-        if (existingEmployee.isPresent()) {
-            absenceRepository.save(absence);
-            return true;
-        } else {
-            return false;
-        }
+    public void createAbsence(AbsenceRequest request) {
+        UUID employeeId = request.employeeId();
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee with ID '" + employeeId + "' does not exist."));
+
+        LocalDate startDate = request.startDate();
+        LocalDate endDate = request.endDate();
+        String type = request.type();
+
+        Absence absence = Absence.builder()
+                .employee(employee) // Use the found Employee entity
+                .type(type)
+                .startDate(startDate)
+                .endDate(endDate)
+                .approval(false)
+                .build();
+        absenceRepository.save(absence);
     }
 
     //TODO Hay que cambiar ligeramente estos 3 metodos para que solo el HRManager pueda modificarlos
@@ -65,5 +76,25 @@ public class AbsenceService {
 
     public void deleteAbsence(UUID id) {
         absenceRepository.deleteById(id);
+    }
+
+    //TODO Hay que modificar este metodo para que el Employee sea el unico que pueda acceder
+    public List<Absence> getAbsencesByEmployeeId(UUID employeeId) {
+        return absenceRepository.findByEmployeeEmployeeID(employeeId);
+    }
+
+    public void updateAbsenceRequest (UUID absenceId, AbsenceRequest updatedAbsence) {
+        Optional<Absence> absence = absenceRepository.findById(absenceId);
+        if (absence.isPresent() && absence.get().getEmployee().getEmployeeID().equals(updatedAbsence.employeeId())) {
+            Absence existingAbsence = absence.get();
+
+            existingAbsence.setStartDate(updatedAbsence.startDate());
+            existingAbsence.setEndDate(updatedAbsence.endDate());
+            existingAbsence.setType(updatedAbsence.type());
+            existingAbsence.setApproval(false);
+            absenceRepository.save(existingAbsence);
+        } else {
+            throw  new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");
+        }
     }
 }
