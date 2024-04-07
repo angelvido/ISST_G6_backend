@@ -26,7 +26,7 @@ public class RecruiterController {
         this.offerService = offerService;
     }
 
-    @GetMapping("/candidates/{offerId}")
+    @PostMapping("/candidates/{offerId}")
     public ResponseEntity<Optional<List<Candidate>>> getCandidatesForOffer(@PathVariable UUID offerId, @RequestBody @Valid IDRequest request) {
         Optional<List<Candidate>> candidates = offerService.getCandidatesForOffer(offerId, request.Id());
         return ResponseEntity.ok(candidates);
