@@ -28,7 +28,7 @@ public class EmployeeController {
         this.absenceService = absenceService;
     }
 
-    @GetMapping("/data")
+    @PostMapping("/data")
     public ResponseEntity<DataResponse> getData(@Valid @RequestBody IDRequest requestDto) {
         DataResponse dataResponse = employeeService.data(requestDto);
         if (dataResponse != null) {
