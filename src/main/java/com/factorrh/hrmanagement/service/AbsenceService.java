@@ -89,7 +89,7 @@ public class AbsenceService {
             existingAbsence.setStartDate(updatedAbsence.startDate());
             existingAbsence.setEndDate(updatedAbsence.endDate());
             existingAbsence.setType(updatedAbsence.type());
-            existingAbsence.setApproval(false);
+            existingAbsence.setApproval(!existingAbsence.isApproval());
             absenceRepository.save(existingAbsence);
         } else {
             throw new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");

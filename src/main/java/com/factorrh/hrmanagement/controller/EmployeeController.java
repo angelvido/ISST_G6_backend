@@ -49,7 +49,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/absences")
+    @PostMapping("/absences")
     public ResponseEntity<List<Absence>> getAllAbsences(@Valid @RequestBody IDRequest requestDto) {
         List<Absence> absences = absenceService.getAbsencesByEmployeeId(requestDto.Id());
         return ResponseEntity.ok(absences);

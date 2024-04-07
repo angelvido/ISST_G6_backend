@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "http://localhost:3000") 
 @RestController
 @RequestMapping("/api/manager")
 public class HRController {
@@ -22,7 +23,7 @@ public class HRController {
         this.absenceService = absenceService;
     }
 
-    @GetMapping("/absences")
+    @PostMapping("/absences")
     public List<Absence> getAllAbsences(@Valid @RequestBody IDRequest request) {
         return absenceService.getAllAbsences(request);
     }
