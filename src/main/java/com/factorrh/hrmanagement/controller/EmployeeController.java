@@ -107,9 +107,9 @@ public class EmployeeController {
     //    "endDate" : "2024-06-30"
     //}
     @PatchMapping("/absence/{id}")
-    public ResponseEntity<Void> updateAbsence(@Valid @RequestBody AbsenceRequest requestDto, @PathVariable UUID id) {
-        absenceService.updateAbsenceRequest(id, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<Absence> updateAbsence(@Valid @RequestBody AbsenceRequest requestDto, @PathVariable UUID id) {
+        Absence response = absenceService.updateAbsence(id, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //Query de este metodo: http://localhost:8080/api/employees/schedule/{id del empleado}

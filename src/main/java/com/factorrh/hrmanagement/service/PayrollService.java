@@ -1,6 +1,7 @@
 package com.factorrh.hrmanagement.service;
 
-import com.factorrh.hrmanagement.JobType;
+import com.factorrh.hrmanagement.utils.IRPFCalculator;
+import com.factorrh.hrmanagement.utils.JobTypeEnum;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.Payroll;
 import com.factorrh.hrmanagement.repository.PayrollRepository;
@@ -32,20 +33,28 @@ public class PayrollService {
             BigDecimal hoursWorked = scheduleService.getHoursWorkedForEmployee(employee, startDate, endDate);
             String jobId = employee.getJob();
             BigDecimal hourlyRate;
+            BigDecimal irpfRetentionPercentage;
             try {
-                hourlyRate = JobType.valueOf(jobId).getHourlyRate();
+                hourlyRate = JobTypeEnum.valueOf(jobId).getHourlyRate();
+                irpfRetentionPercentage = IRPFCalculator.calcularRetencionMedia(JobTypeEnum.valueOf(jobId));
             } catch (IllegalArgumentException e) {
-                hourlyRate = JobType.Default.getHourlyRate();
+                hourlyRate = JobTypeEnum.Default.getHourlyRate();
+                irpfRetentionPercentage = IRPFCalculator.calcularRetencionMedia(JobTypeEnum.Default);
             }
 
-            BigDecimal totalAmount = hoursWorked.multiply(hourlyRate);
+            BigDecimal totalGrossSalary = hoursWorked.multiply(hourlyRate);
+            BigDecimal irpfRetention = totalGrossSalary.multiply(irpfRetentionPercentage);
+            BigDecimal totalNetSalary = totalGrossSalary.subtract(irpfRetention);
 
             Payroll payroll = new Payroll();
             payroll.setEmployee(employee);
             payroll.setStartDate(startDate);
             payroll.setEndDate(endDate);
             payroll.setHours(hoursWorked);
-            payroll.setAmount(totalAmount);
+            payroll.setGrossSalary(totalGrossSalary);
+            payroll.setIrpfRetentionPercentage(irpfRetentionPercentage);
+            payroll.setIrpfRetention(irpfRetention);
+            payroll.setNetSalary(totalNetSalary);
             payrolls.add(payroll);
         }
         payrollRepository.saveAll(payrolls);

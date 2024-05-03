@@ -3,7 +3,6 @@ package com.factorrh.hrmanagement.controller;
 import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.HRManager;
-import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
 import com.factorrh.hrmanagement.model.dto.PayrollRequest;
 import com.factorrh.hrmanagement.repository.HRManagerRepository;
 import com.factorrh.hrmanagement.service.AbsenceService;
@@ -75,22 +74,15 @@ public class HRController {
     }
 
     //Query de este metodo: http://localhost:8080/api/manager/absence/{id de la ausencia}?managerId={id del hrmanager}
-    //Body de este metodo: {
-    //    "employeeId" : "cf1ab991-9edb-4618-9dd6-1d79bc35a390",
-    //    "type" : "Vacaciones",
-    //    "startDate" : "2024-06-17",
-    //    "endDate" : "2024-06-30",
-    //    "approval" : "true"
-    //}
-    @PatchMapping("/absence/{id}")
-    public ResponseEntity<Absence> updateAbsence(@PathVariable UUID id, @RequestParam UUID managerId, @RequestBody AbsenceRequest absence) {
+    @PutMapping("/absence/{id}")
+    public ResponseEntity<Absence> changeApproval(@PathVariable UUID id, @RequestParam UUID managerId) {
         try {
             if (managerId == null) {
                 return ResponseEntity.badRequest().build();
             }
             Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
             if (existingHRManager.isPresent()) {
-                Absence response = absenceService.updateAbsence(id, absence);
+                Absence response = absenceService.changeApproval(id);
                 return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.notFound().build();

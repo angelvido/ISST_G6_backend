@@ -43,7 +43,7 @@ public class AuthService {
         String lastname = request.lastname();
         LocalDate admission = LocalDate.now();
         String job = request.job();
-        String password = request.password();       //TODO password debería de encriptarse
+        String password = request.password();       //TODO - La password debería de encriptarse
         Optional<Employee> existingEmployee = employeeRepository.findByUsername(username);
         if (existingEmployee.isPresent()) {
             throw new DuplicateKeyException(String.format("Employee with username '%s' already exists.", username));
@@ -86,7 +86,7 @@ public class AuthService {
             Employee employee = existingEmployee.get();
             String storedPassword = employee.getPassword();
 
-            if (Objects.equals(storedPassword, password)) {     //TODO Hay que cambiar para que la contraseña se decodifique y demas
+            if (Objects.equals(storedPassword, password)) {     //TODO - La password se debería descodificar
 
                 UUID storedEmployeeId = employee.getEmployeeID();
                 Optional<Recruiter> existingRecruiter = recruiterRepository.findByEmployee_EmployeeID(storedEmployeeId);

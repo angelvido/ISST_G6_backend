@@ -30,8 +30,17 @@ public class Payroll {
     @Column(name = "horas")
     private BigDecimal hours;
 
-    @Column(name = "monto")
-    private BigDecimal amount;
+    @Column(name = "salario_bruto")
+    private BigDecimal grossSalary;
+
+    @Column(name = "porcentaje_retencion_irpf")
+    private BigDecimal irpfRetentionPercentage;
+
+    @Column(name = "retencion_irpf")
+    private BigDecimal irpfRetention;
+
+    @Column(name = "salario_neto")
+    private BigDecimal netSalary;
 
     @Column(name = "fecha_inicio")
     private LocalDate startDate;

@@ -57,13 +57,31 @@ public class AbsenceService {
 
     @Transactional
     public Absence updateAbsence(UUID id, AbsenceRequest updatedAbsence) {
-        Absence existingAbsence = getAbsenceById(id);
-        existingAbsence.setType(updatedAbsence.type());
-        existingAbsence.setStartDate(updatedAbsence.startDate());
-        existingAbsence.setEndDate(updatedAbsence.endDate());
-        existingAbsence.setApproval(updatedAbsence.approval());
-        absenceRepository.save(existingAbsence);
-        return existingAbsence;
+        Optional<Absence> absence = absenceRepository.findById(id);
+        if (absence.isPresent() && absence.get().getEmployee().getEmployeeID().equals(updatedAbsence.employeeId())) {
+            Absence existingAbsence = getAbsenceById(id);
+            existingAbsence.setType(updatedAbsence.type());
+            existingAbsence.setStartDate(updatedAbsence.startDate());
+            existingAbsence.setEndDate(updatedAbsence.endDate());
+            existingAbsence.setApproval(updatedAbsence.approval());
+            absenceRepository.save(existingAbsence);
+            return existingAbsence;
+        } else {
+            throw new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");
+        }
+    }
+
+    @Transactional
+    public Absence changeApproval(UUID id) {
+        Optional<Absence> absence = absenceRepository.findById(id);
+        if (absence.isPresent()) {
+            Absence existingAbsence = getAbsenceById(id);
+            existingAbsence.setApproval(!existingAbsence.isApproval());
+            absenceRepository.save(existingAbsence);
+            return existingAbsence;
+        } else {
+            throw new IllegalArgumentException("Cannot update absence. Absence doesn't exists.");
+        }
     }
 
     public void deleteAbsence(UUID id) {
@@ -72,20 +90,5 @@ public class AbsenceService {
 
     public List<Absence> getAbsencesByEmployeeId(UUID employeeId) {
         return absenceRepository.findByEmployeeEmployeeID(employeeId);
-    }
-
-    public void updateAbsenceRequest(UUID absenceId, AbsenceRequest updatedAbsence) {
-        Optional<Absence> absence = absenceRepository.findById(absenceId);
-        if (absence.isPresent() && absence.get().getEmployee().getEmployeeID().equals(updatedAbsence.employeeId())) {
-            Absence existingAbsence = absence.get();
-
-            existingAbsence.setStartDate(updatedAbsence.startDate());
-            existingAbsence.setEndDate(updatedAbsence.endDate());
-            existingAbsence.setType(updatedAbsence.type());
-            existingAbsence.setApproval(!existingAbsence.isApproval());
-            absenceRepository.save(existingAbsence);
-        } else {
-            throw new IllegalArgumentException("Cannot update absence. Absence doesn't exists or employee ID does not match.");
-        }
     }
 }
