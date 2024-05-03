@@ -25,12 +25,25 @@ public class AuthController {
         this.authService = employeeService;
     }
 
+    //Query de este metodo: http://localhost:8080/api/auth/register
+    //Body de este metodo: {
+    //    "username" : "user1",
+    //    "name" : "user",
+    //    "lastname" : "user",
+    //    "job" : "HRManager",
+    //    "password" : "123456"
+    //}
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest requestDto) {
         authService.register(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    //Query de este metodo: http://localhost:8080/api/auth/login
+    //Body de este metodo: {
+    //    "username" : "user",
+    //    "password" : "123456"
+    //}
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest requestDto) {
         try {

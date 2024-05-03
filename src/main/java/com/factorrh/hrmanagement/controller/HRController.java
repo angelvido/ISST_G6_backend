@@ -4,7 +4,6 @@ import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
 import com.factorrh.hrmanagement.entity.HRManager;
 import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
-import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.model.dto.PayrollRequest;
 import com.factorrh.hrmanagement.repository.HRManagerRepository;
 import com.factorrh.hrmanagement.service.AbsenceService;
@@ -37,34 +36,101 @@ public class HRController {
         this.hrManagerRepository = hrManagerRepository;
     }
 
+    //Query de este metodo: http://localhost:8080/api/manager/absences?managerId={id del hrmanager}
     @GetMapping("/absences")
-    public List<Absence> getAllAbsences(@Valid @RequestBody IDRequest request) {
-        return absenceService.getAllAbsences(request);
+    public ResponseEntity<List<Absence>> getAllAbsences(@RequestParam UUID managerId) {
+        try {
+            if (managerId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
+            if (existingHRManager.isPresent()) {
+                List<Absence> response = absenceService.getAllAbsences();
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    //TODO Configurar los tres siguientes metodos del controlador para que se compruebe el inicio de sesion del HRManager
+    //Query de este metodo: http://localhost:8080/api/manager/absence/{id de la ausencia}?managerId={id del hrmanager}
     @GetMapping("/absence/{id}")
-    public Absence getAbsenceById(@PathVariable UUID id) {
-        return absenceService.getAbsenceById(id);
+    public ResponseEntity<Absence> getAbsenceById(@PathVariable UUID id, @RequestParam UUID managerId) {
+        try {
+            if (managerId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
+            if (existingHRManager.isPresent()) {
+                Absence response = absenceService.getAbsenceById(id);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-
+    //Query de este metodo: http://localhost:8080/api/manager/absence/{id de la ausencia}?managerId={id del hrmanager}
+    //Body de este metodo: {
+    //    "employeeId" : "cf1ab991-9edb-4618-9dd6-1d79bc35a390",
+    //    "type" : "Vacaciones",
+    //    "startDate" : "2024-06-17",
+    //    "endDate" : "2024-06-30",
+    //    "approval" : "true"
+    //}
     @PatchMapping("/absence/{id}")
-    public void updateAbsence(@PathVariable UUID id, @RequestBody AbsenceRequest absence) {
-        absenceService.updateAbsence(id, absence);
+    public ResponseEntity<Absence> updateAbsence(@PathVariable UUID id, @RequestParam UUID managerId, @RequestBody AbsenceRequest absence) {
+        try {
+            if (managerId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
+            if (existingHRManager.isPresent()) {
+                Absence response = absenceService.updateAbsence(id, absence);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    //Query de este metodo: http://localhost:8080/api/manager/absence/{id de la ausencia}?managerId={id del hrmanager}
     @DeleteMapping("/absence/{id}")
-    public void deleteAbsence(@PathVariable UUID id) {
-        absenceService.deleteAbsence(id);
+    public ResponseEntity<Object> deleteAbsence(@PathVariable UUID id, @RequestParam UUID managerId) {
+        try {
+            if (managerId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            Optional<HRManager> existingHRManager = hrManagerRepository.findById(managerId);
+            if (existingHRManager.isPresent()) {
+                absenceService.deleteAbsence(id);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    //Query de este metodo: http://localhost:8080/api/manager/payrolls/HRManager
+    //Body de este metodo: {
+    //  "hrId": "id del manager",
+    //  "startDate": "2024-05-01",
+    //  "endDate": "2024-05-30"
+    //}
     @PostMapping("/payrolls/{id}")
     public ResponseEntity<Void> generatePayrolls(@PathVariable String id, @RequestBody @Valid PayrollRequest request) {
         UUID hrManagerId = request.hrId();
         Optional<HRManager> hrManagerOptional = hrManagerRepository.findById(hrManagerId);
         if (hrManagerOptional.isPresent()) {
-            List<Employee> employees = employeeService.getAllEmployees();
+            List<Employee> employees = employeeService.getEmployees();
             payrollService.generatePayrolls(employees, request.startDate(), request.endDate());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {

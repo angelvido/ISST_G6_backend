@@ -13,8 +13,5 @@ import java.util.UUID;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
     List<Schedule> findByEmployeeEmployeeID(UUID employeeId);
-    List<Schedule> findByEmployeeAndDateBetween(Employee employee, LocalDate startDate, LocalDate endDate);
-    // Otra manera de hacerlo seria esta
-//    @Query("SELECT s FROM Schedule s WHERE s.employee = :employee AND s.date BETWEEN :startDate AND :endDate")
-//    List<Schedule> findByEmployeeAndDateBetween(@Param("employee") Employee employee, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Schedule> findByEmployeeAndDateBetweenAndApproval(Employee employee, LocalDate startDate, LocalDate endDate, boolean approval);
 }

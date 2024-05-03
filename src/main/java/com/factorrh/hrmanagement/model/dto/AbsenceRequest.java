@@ -11,7 +11,7 @@ public record AbsenceRequest(
         @NotNull(message = "Employee ID cannot be null")
         UUID employeeId,
         @NotBlank(message = "Type of leave cannot be blank")
-        String type, // e.g., "Vacation", "Sick", "Personal", etc.
+        String type,
         @FutureOrPresent(message = "Start date must be in the present or future")
         LocalDate startDate,
         @NotNull(message = "End date cannot be null")

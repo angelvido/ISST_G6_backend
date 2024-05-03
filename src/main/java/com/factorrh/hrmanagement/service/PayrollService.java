@@ -29,11 +29,8 @@ public class PayrollService {
         List<Payroll> payrolls = new ArrayList<>();
 
         for (Employee employee : employees) {
-            // Obtener las horas trabajadas por el empleado desde startDate hasta endDate (suponiendo que hay un método para esto)
             BigDecimal hoursWorked = scheduleService.getHoursWorkedForEmployee(employee, startDate, endDate);
-
             String jobId = employee.getJob();
-
             BigDecimal hourlyRate;
             try {
                 hourlyRate = JobType.valueOf(jobId).getHourlyRate();
@@ -41,18 +38,14 @@ public class PayrollService {
                 hourlyRate = JobType.Default.getHourlyRate();
             }
 
-            // Calcular el monto total de la nómina
             BigDecimal totalAmount = hoursWorked.multiply(hourlyRate);
 
-            // Crear una instancia de Payroll y establecer sus valores
             Payroll payroll = new Payroll();
             payroll.setEmployee(employee);
             payroll.setStartDate(startDate);
             payroll.setEndDate(endDate);
             payroll.setHours(hoursWorked);
             payroll.setAmount(totalAmount);
-
-            // Agregar la nómina a la lista de nóminas
             payrolls.add(payroll);
         }
         payrollRepository.saveAll(payrolls);

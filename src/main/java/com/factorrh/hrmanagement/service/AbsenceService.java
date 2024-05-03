@@ -2,14 +2,12 @@ package com.factorrh.hrmanagement.service;
 
 import com.factorrh.hrmanagement.entity.Absence;
 import com.factorrh.hrmanagement.entity.Employee;
-import com.factorrh.hrmanagement.entity.HRManager;
 import com.factorrh.hrmanagement.model.dto.AbsenceRequest;
-import com.factorrh.hrmanagement.model.dto.IDRequest;
 import com.factorrh.hrmanagement.repository.AbsenceRepository;
 import com.factorrh.hrmanagement.repository.EmployeeRepository;
-import com.factorrh.hrmanagement.repository.HRManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,25 +18,19 @@ import java.util.UUID;
 public class AbsenceService {
 
     private final AbsenceRepository absenceRepository;
-    private final HRManagerRepository hrManagerRepository;
     private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public AbsenceService(AbsenceRepository absenceRepository, HRManagerRepository hrManagerRepository, EmployeeRepository employeeRepository) {
+    public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository) {
         this.absenceRepository = absenceRepository;
-        this.hrManagerRepository = hrManagerRepository;
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Absence> getAllAbsences(IDRequest request) {
-        Optional<HRManager> existingHRManager = hrManagerRepository.findById(request.Id());
-        if (existingHRManager.isPresent()) {
-            return absenceRepository.findAll();
-        } else {
-            return null;
-        }
+    public List<Absence> getAllAbsences() {
+        return absenceRepository.findAll();
     }
 
+    @Transactional
     public void createAbsence(AbsenceRequest request) {
         UUID employeeId = request.employeeId();
         Employee employee = employeeRepository.findById(employeeId)
@@ -58,19 +50,20 @@ public class AbsenceService {
         absenceRepository.save(absence);
     }
 
-    //TODO Hay que cambiar ligeramente estos 3 metodos siguientes para que solo el HRManager pueda modificarlos
     public Absence getAbsenceById(UUID id) {
         return absenceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Absence not found with id: " + id));
     }
 
-    public void updateAbsence(UUID id, AbsenceRequest updatedAbsence) {
+    @Transactional
+    public Absence updateAbsence(UUID id, AbsenceRequest updatedAbsence) {
         Absence existingAbsence = getAbsenceById(id);
         existingAbsence.setType(updatedAbsence.type());
         existingAbsence.setStartDate(updatedAbsence.startDate());
         existingAbsence.setEndDate(updatedAbsence.endDate());
         existingAbsence.setApproval(updatedAbsence.approval());
         absenceRepository.save(existingAbsence);
+        return existingAbsence;
     }
 
     public void deleteAbsence(UUID id) {

@@ -64,7 +64,7 @@ public class ScheduleService {
     public BigDecimal getHoursWorkedForEmployee(Employee employee, LocalDate startDate, LocalDate endDate) {
         BigDecimal totalHoursWorked = BigDecimal.ZERO;
 
-        List<Schedule> schedules = scheduleRepository.findByEmployeeAndDateBetween(employee, startDate, endDate);
+        List<Schedule> schedules = scheduleRepository.findByEmployeeAndDateBetweenAndApproval(employee, startDate, endDate, true);
 
         for (Schedule schedule : schedules) {
             BigDecimal hoursWorkedInSchedule = calculateHoursWorkedInSchedule(schedule);
