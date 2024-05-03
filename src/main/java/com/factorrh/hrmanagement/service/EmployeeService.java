@@ -53,4 +53,9 @@ public class EmployeeService {
             return Collections.emptyList();
         }
     }
+
+    @Transactional
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
 }
