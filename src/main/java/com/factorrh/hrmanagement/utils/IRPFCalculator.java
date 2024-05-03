@@ -12,18 +12,20 @@ public class IRPFCalculator {
         BigDecimal salarioAnual = jobTypeEnum.getAnnualSalaryRate();
         BigDecimal retencionTotal = BigDecimal.ZERO;
 
+        BigDecimal salarioRestante = salarioAnual;
+
         for (IRPFEnum tramo : IRPFEnum.values()) {
             BigDecimal limite = tramo.getLimite();
             BigDecimal porcentaje = tramo.getPorcentaje();
 
-            if (limite == null || salarioAnual.compareTo(limite) <= 0) {
-                BigDecimal retencionTramo = salarioAnual.subtract(limite == null ? BigDecimal.ZERO : limite).multiply(porcentaje);
+            if (limite == null || salarioRestante.compareTo(limite) <= 0) {
+                BigDecimal retencionTramo = salarioRestante.multiply(porcentaje);
                 retencionTotal = retencionTotal.add(retencionTramo);
                 break;
             } else {
-                BigDecimal salarioEnTramo = salarioAnual.subtract(limite);
-                BigDecimal retencionTramo = salarioEnTramo.multiply(porcentaje);
+                BigDecimal retencionTramo = limite.multiply(porcentaje);
                 retencionTotal = retencionTotal.add(retencionTramo);
+                salarioRestante = salarioRestante.subtract(limite);
             }
         }
 
